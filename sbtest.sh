@@ -115,19 +115,18 @@ trap _cleanup INT TERM EXIT
 for test in ${tests}; do
     _setup_workspace
 
-    (
-        cd ${workspace}
+    pushd ${workspace} >/dev/null
 
-        if [ -n ${setup} ]; then
-            ${setup}
-        fi
+    if [ -n ${setup} ]; then
+        ${setup}
+    fi
 
-        printf "Running test ${test}..."
-        ${test} || fail "Test failed with exit code $?"
-        echo "ok"
+    printf "Running test ${test}..."
+    ${test} || fail "Test failed with exit code $?"
+    echo "ok"
 
-        _cleanup
-    )
+    _cleanup
+    popd
 done
 
 trap - INT TERM EXIT
