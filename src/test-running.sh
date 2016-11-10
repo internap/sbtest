@@ -62,7 +62,7 @@ for test in ${tests}; do
     echo "ok"
 
     _cleanup
-    popd
+    popd >/dev/null
 done
 
 trap - INT TERM EXIT
