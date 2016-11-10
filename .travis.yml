@@ -1,0 +1,10 @@
+script: make
+
+deploy:
+  provider: releases
+  api_key:
+    secure: mkbvvEfLHUEoyC1ZWbSkwgeH2gP1yVO4gD1169bvxWMcYUo+VTFQD79Tli6H6q08Artl4+TW/N/HZt4aMB1ev1EAWHmFfRS3GSAFF4ShAZ98fmCoo7+F2Gj//vi5auOq9kHxAa4xlOKw1OACM7Jwxe3HMW3vZzSCp6SRRwRPC2+8dSWSwwryEp88OePDSOiKt3kbLImltA7PMK/XPsp7c5NXStHa1K0HEB8r7V/EVuHsNAk3dFm9Jef/oz6HAtSFesdFDCSYY5G0c6yfOA9kApIDSappo7fLHfELccCaRxwwWT7RF0qRpSjBan/qAlXS4ZKIx50NGChfOqL8OJDtyAgxu8V6kyBdqXp3QrgrznimH30ErTUMSRYCaIS8ODNhN1Zj0iyeJk6ELlyXXh/ffCBZGgq8eAZcHBzqXxh+DS5J5239bQBQwByqhN7x2lafqOxRtiyZS9BLungpUFPC3jgn51O5gYoIQfWSrbd7ahP271POipylA5AdOERhU4C69jsvsfxbhiQR3dUbCNpg7vII2LeZt1iRAHEf1LuRftBPZOeXnvZ6Q9guKkFLUY83kNKi5ScMtuF88T2ioezeyfrzNPVFBSkZc6kaZ9d/lF/eWKmW+SEjXCdJaQo/uGyCGSiu+80pS0hflaksPa7PtJyWk99DiLE2XK2hW++F3TA=
+  file: target/sbtest.sh
+  on:
+    repo: internap/sbtest
+    tags: true
