@@ -1,3 +1,3 @@
 compile:
 	mkdir -p target
-	cp sbtest.sh target/sbtest.sh
+	bash src/aggregate.sh > target/sbtest.sh
