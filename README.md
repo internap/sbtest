@@ -45,6 +45,6 @@ test
     
         bash ./clean.sh some-file
     
-        assert_int $? 0
+        assert ${?} succeeded
     }
     
