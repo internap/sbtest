@@ -23,11 +23,10 @@ add.sh
 
 test 
 
-    test_addition() {
-    
+    test_add() {
         result=$(bash ./add.sh 2 2)
     
-        assert_int ${result} 4
+        assert ${result} equals 4
     }
 
 Using mocks
