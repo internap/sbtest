@@ -78,3 +78,35 @@ EXP
 )
     assert "${actual}" equals "${expected}"
 }
+
+test_output_is_fine_when_a_test_fails() {
+
+    cp -aR ${TEST_ROOT_DIR}/../test-fixtures/failing-test/* .
+
+    unset RUN_SINGLE_TEST
+    actual=$(${TEST_ROOT_DIR}/../target/sbtest.sh)
+    assert ${?} failed
+
+    expected=$(cat <<-EXP
+
+Running Simple Bash Tests
+-------------------------
+
+failing.that_fails...FAILED
+
+=========================
+FAIL: failing.that_fails
+-------------------------
+Expected success exit code
+Got: <1>
+-------------------------
+
+-------------------------
+Ran 1 test
+
+>>> FAILURE (1 error) <<<
+
+EXP
+)
+    assert "${actual}" equals "${expected}"
+}
