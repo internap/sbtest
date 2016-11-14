@@ -34,13 +34,23 @@ if [ -z "${RUN_SINGLE_TEST:-""}" ]; then
     test_count=$((${test_count} + ${new_tests}))
   done
 
+  if [ -f ${registry}/failures_output ]; then
+    cat ${registry}/failures_output
+  fi
   echo ""
   echo "-------------------------"
   echo "Ran "$(_format_count ${test_count} "test")
   echo ""
-  echo ">>> SUCCESS <<<"
-  echo ""
-  exit 0
+  failure_count=$(cat ${registry}/failures_count)
+  if [ ${failure_count} -eq 0 ]; then
+    echo ">>> SUCCESS <<<"
+    echo ""
+    exit 0
+  else
+    echo ">>> FAILURE ("$(_format_count ${failure_count} "error")") <<<"
+    echo ""
+    exit 1
+  fi
 fi
 
 
@@ -85,6 +95,13 @@ _cleanup() {
 trap _cleanup INT TERM EXIT
 
 test_count=0
+failures=0
+
+assertion_failed() {
+    touch ${workspace}/.assertion_error
+    echo -e "$1"
+    return 1
+}
 
 for test in ${tests}; do
     _setup_workspace
@@ -95,9 +112,28 @@ for test in ${tests}; do
         ${setup}
     fi
 
-    printf $(_trim_test_prefix $(_file_base_name $(basename ${TEST_FILE}))).$(_trim_test_prefix ${test})...
-    ${test} || fail "Test failed with exit code $?"
-    echo "OK"
+    test_name=$(_trim_test_prefix $(_file_base_name $(basename ${TEST_FILE}))).$(_trim_test_prefix ${test})
+    printf ${test_name}...
+
+    failed=0
+
+    ${test} > ${workspace}/test_output || true
+
+    if [ ! -f ${workspace}/.assertion_error ]; then
+        echo "OK"
+    else
+        echo "FAILED"
+        failures=$((${failures} + 1))
+        cat >> ${REGISTRY}/failures_output <<FAILURE
+
+=========================
+FAIL: ${test_name}
+-------------------------
+$(cat ${workspace}/test_output)
+-------------------------
+FAILURE
+
+    fi
     test_count=$((${test_count} + 1))
 
     _cleanup
@@ -105,5 +141,6 @@ for test in ${tests}; do
 done
 
 echo ${test_count} > ${REGISTRY}/test_count
+echo ${failures} > ${REGISTRY}/failures_count
 
 trap - INT TERM EXIT
