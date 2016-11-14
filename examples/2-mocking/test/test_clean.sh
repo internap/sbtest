@@ -5,13 +5,13 @@ test_clean_works() {
 
     bash ./clean.sh some-file
 
-    assert_int $? 0
+    assert ${?} succeeded
 }
 
 test_clean_works_fails() {
-    mock rm --with-args "somewhere/some-file" --and exitcode 1
+    mock rm --with-args "somewhere/non-existing-file" --and exitcode 1
 
     bash ./clean.sh non-existing-file
 
-    assert_int $? 1
+    assert ${?} failed
 }
