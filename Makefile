@@ -6,7 +6,10 @@ clean:
 compile:
 	mkdir -p target
 	bash src/aggregate.sh > target/sbtest.sh
+	chmod +x target/sbtest.sh
 
 test: compile
-	chmod +x target/sbtest.sh
 	target/sbtest.sh
+
+.DEFAULT: compile
+	target/sbtest.sh $@

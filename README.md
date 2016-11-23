@@ -50,3 +50,16 @@ test
         assert ${?} succeeded
     }
     
+
+Contributing
+============
+
+Feel free to add stuff in here :)
+
+Running the tests:
+
+    make test
+    
+you can run only one suite/test with
+
+    make suite.test

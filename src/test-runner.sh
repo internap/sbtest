@@ -1,12 +1,13 @@
 
 SOURCE_ROOT=$1
 TEST_FILE=$2
-REGISTRY=$3
+TESTS_FILTER=$3
+REGISTRY=$4
 
 source ${TEST_FILE} || fail "Unable to read ${TEST_FILE}."
 
 all_functions=$(typeset -F | sed "s/declare -f //")
-tests=$(echo "${all_functions}" | grep "^test_" || true)
+tests=$(echo "${all_functions}" | grep ${TESTS_FILTER} || true)
 setup=$(echo "${all_functions}" | grep "^setup$" || true)
 teardown=$(echo "${all_functions}" | grep "^teardown" || true)
 
