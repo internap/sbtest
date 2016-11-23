@@ -9,7 +9,4 @@ compile:
 	chmod +x target/sbtest.sh
 
 test: compile
-	target/sbtest.sh
-
-.DEFAULT: compile
-	target/sbtest.sh $@
+	target/sbtest.sh ${TEST}
