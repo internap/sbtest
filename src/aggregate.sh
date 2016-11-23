@@ -7,4 +7,5 @@ cat ${src}/header.sh
 cat ${src}/utils.sh
 cat ${src}/asserts.sh
 cat ${src}/mocking.sh
-cat ${src}/test-running.sh
+cat ${src}/cli.sh
+cat ${src}/test-runner.sh
