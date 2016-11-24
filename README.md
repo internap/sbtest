@@ -43,7 +43,7 @@ clean.sh
 test
 
     test_clean_works() {
-        mock rm --and exit-code 0
+        mock rm --with-args "somewhere/some-file" --and exit-code 0
     
         bash ./clean.sh some-file
     
