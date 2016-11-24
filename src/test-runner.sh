@@ -63,7 +63,7 @@ for test in ${tests}; do
 
     failed=0
 
-    ${test} > ${workspace}/test_output || true
+    ${test} >${workspace}/test_output 2>${workspace}/test_output_err || true
 
     if [ ! -f ${workspace}/.assertion_error ]; then
         echo "OK"
@@ -74,8 +74,10 @@ for test in ${tests}; do
 
 =========================
 FAIL: ${test_name}
--------------------------
+-------- STDOUT ---------
 $(cat ${workspace}/test_output)
+-------- STDERR ---------
+$(cat ${workspace}/test_output_err)
 -------------------------
 FAILURE
 

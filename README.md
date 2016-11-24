@@ -62,4 +62,4 @@ Running the tests:
     
 you can run only one suite/test with
 
-    make suite.test
+    make test TEST=suite.test
