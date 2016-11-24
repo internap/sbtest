@@ -38,7 +38,7 @@ if [ -z "${RUN_SINGLE_TEST:-""}" ]; then
     registry="$(mktemp -d "/tmp/workspace.registry.XXXXXXXX")"
     test_count=0
 
-    for f in $(find ${test_sources_root} -name "${test_suites_filter}"); do
+    for f in $(find ${test_sources_root} -name "${test_suites_filter}" | sort); do
         TEST_ROOT_DIR=${test_sources_root} RUN_SINGLE_TEST=1 $0 ${sources_root} ${f} ${test_filter} ${registry} || fail "${f} failed."
 
         new_tests=$(cat ${registry}/test_count)
