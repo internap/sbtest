@@ -21,6 +21,22 @@ _setup_workspace() {
     export PATH="$mocks:${PATH}"
 }
 
+_problem_report() {
+    type=$1
+    test=$2
+    workspace=$3
+
+    cat <<FAILURE
+
+=========================
+${type}: ${test}
+-------- STDOUT ---------
+$(cat ${workspace}/test_output)
+-------- STDERR ---------
+$(cat ${workspace}/test_output_err)
+-------------------------
+FAILURE
+}
 
 _cleanup() {
     if [ -n ${teardown} ]; then
@@ -63,24 +79,19 @@ for test in ${tests}; do
 
     failed=0
 
-    ${test} >${workspace}/test_output 2>${workspace}/test_output_err || true
+    ${test} >${workspace}/test_output 2>${workspace}/test_output_err || error_code=${?}
 
-    if [ ! -f ${workspace}/.assertion_error ]; then
-        echo "OK"
-    else
+    if [ -f ${workspace}/.assertion_error ]; then
         echo "FAILED"
         failures=$((${failures} + 1))
-        cat >> ${REGISTRY}/failures_output <<FAILURE
-
-=========================
-FAIL: ${test_name}
--------- STDOUT ---------
-$(cat ${workspace}/test_output)
--------- STDERR ---------
-$(cat ${workspace}/test_output_err)
--------------------------
-FAILURE
-
+        _problem_report "FAIL" ${test_name} ${workspace} >> ${REGISTRY}/failures_output
+    elif [ -n "${error_code}" ]; then
+        echo "ERROR"
+        failures=$((${failures} + 1))
+        echo "EXIT CODE : ${error_code}" >> ${workspace}/test_output_err
+        _problem_report "ERROR" ${test_name} ${workspace} >> ${REGISTRY}/failures_output
+    else
+        echo "OK"
     fi
     test_count=$((${test_count} + 1))
 
