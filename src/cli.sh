@@ -60,7 +60,7 @@ if [ -z "${RUN_SINGLE_TEST:-""}" ]; then
         echo ""
         exit 0
     else
-        echo ">>> FAILURE ("$(_format_count ${failure_count} "error")") <<<"
+        echo ">>> FAILURE ("$(_format_count ${failure_count} "problem")") <<<"
         echo ""
         exit 1
     fi

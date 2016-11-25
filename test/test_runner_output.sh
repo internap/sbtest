@@ -106,7 +106,7 @@ Got: <1>
 -------------------------
 Ran 1 test
 
->>> FAILURE (1 error) <<<
+>>> FAILURE (1 problem) <<<
 
 EXP
 )
@@ -141,7 +141,41 @@ from stderr
 -------------------------
 Ran 1 test
 
->>> FAILURE (1 error) <<<
+>>> FAILURE (1 problem) <<<
+
+EXP
+)
+    assert "${actual}" equals "${expected}"
+}
+
+test_with_an_error_while_running_the_test_should_show_it_is_in_error() {
+
+    cp -aR ${TEST_ROOT_DIR}/../test-fixtures/erroring-test/* .
+
+    unset RUN_SINGLE_TEST
+    actual=$(${TEST_ROOT_DIR}/../target/sbtest.sh erroring.non_existing_command)
+    assert ${?} failed
+
+    expected=$(cat <<-EXP
+
+Running Simple Bash Tests
+-------------------------
+
+erroring.non_existing_command...ERROR
+
+=========================
+ERROR: erroring.non_existing_command
+-------- STDOUT ---------
+stuff on stdout
+-------- STDERR ---------
+stuff on stderr
+EXIT CODE : 96
+-------------------------
+
+-------------------------
+Ran 1 test
+
+>>> FAILURE (1 problem) <<<
 
 EXP
 )
