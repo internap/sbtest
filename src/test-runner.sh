@@ -81,6 +81,8 @@ for test in ${tests}; do
 
     ${test} >${workspace}/test_output 2>${workspace}/test_output_err || error_code=${?}
 
+    _verify_mocks >>${workspace}/test_output 2>>${workspace}/test_output_err || true
+
     if [ -f ${workspace}/.assertion_error ]; then
         echo "FAILED"
         failures=$((${failures} + 1))
@@ -94,6 +96,7 @@ for test in ${tests}; do
         echo "OK"
     fi
     test_count=$((${test_count} + 1))
+    error_code=""
 
     _cleanup
     popd >/dev/null
