@@ -181,3 +181,38 @@ EXP
 )
     assert "${actual}" equals "${expected}"
 }
+
+test_a_failure_is_correctly_reported_after_even_after_another_suite_succeeds() {
+
+    cp -aR ${TEST_ROOT_DIR}/../test-fixtures/multi-suite/* .
+
+    unset RUN_SINGLE_TEST
+    actual=$(${TEST_ROOT_DIR}/../target/sbtest.sh)
+    assert ${?} failed
+
+    expected=$(cat <<-EXP
+
+Running Simple Bash Tests
+-------------------------
+
+first.failing...FAILED
+second.succeeding...OK
+
+=========================
+FAIL: first.failing
+-------- STDOUT ---------
+Expected: <2>
+Got:      <1>
+-------- STDERR ---------
+
+-------------------------
+
+-------------------------
+Ran 2 tests
+
+>>> FAILURE (1 problem) <<<
+
+EXP
+)
+    assert "${actual}" equals "${expected}"
+}
