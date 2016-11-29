@@ -37,12 +37,15 @@ if [ -z "${RUN_SINGLE_TEST:-""}" ]; then
 
     registry="$(mktemp -d "/tmp/workspace.registry.XXXXXXXX")"
     test_count=0
+    failure_count=0
 
     for f in $(find ${test_sources_root} -name "${test_suites_filter}" | sort); do
         TEST_ROOT_DIR=${test_sources_root} RUN_SINGLE_TEST=1 $0 ${sources_root} ${f} ${test_filter} ${registry} || fail "${f} failed."
 
         new_tests=$(cat ${registry}/test_count)
         test_count=$((${test_count} + ${new_tests}))
+        new_failures=$(cat ${registry}/failures_count)
+        failure_count=$((${failure_count} + ${new_failures}))
     done
 
     if [ -f ${registry}/failures_output ]; then
@@ -54,7 +57,6 @@ if [ -z "${RUN_SINGLE_TEST:-""}" ]; then
     echo "Ran "$(_format_count ${test_count} "test")
     echo ""
 
-    failure_count=$(cat ${registry}/failures_count)
     if [ ${failure_count} -eq 0 ]; then
         echo ">>> SUCCESS <<<"
         echo ""
