@@ -35,7 +35,6 @@ mock() {
     local actions_params=()
     local action_count=0
     local has_args_validation=false
-    local expected_calls=-1 #any
 
     while [[ $# -gt 0 ]]; do
         local key="$1"
@@ -58,9 +57,6 @@ mock() {
                 return 1
             fi
             ;;
-            --once)
-            expected_calls=1
-            ;;
         esac
         shift
     done
@@ -80,10 +76,7 @@ mock() {
     fi
 
     echo ${invocation_count} > ${mock_workspace}/invocation_count
-    invocation_file="${mock_workspace}/invocation_${invocation_count}_code"
-
-    echo 0 > "${mock_workspace}/invocation_${invocation_count}_calls"
-    echo ${expected_calls} > "${mock_workspace}/invocation_${invocation_count}_expected_calls"
+    invocation_file="${mock_workspace}/invocation_${invocation_count}"
 
     echo "#!/bin/bash" > ${invocation_file}
 
@@ -107,30 +100,6 @@ if [ \${invocation_index} -lt \$(cat \${workspace}/invocation_count) ]; then
     echo \$((invocation_index + 1)) > \${workspace}/invocation_index
 fi
 
-invocation_calls=\$(cat \${workspace}/invocation_\${invocation_index}_calls)
-echo \$((invocation_calls + 1)) > \${workspace}/invocation_\${invocation_index}_calls
-
-expected_calls=\$(cat \${workspace}/invocation_\${invocation_index}_expected_calls)
-if [ \${expected_calls} -ge 0 ] && [ \$((invocation_calls + 1)) -gt \${expected_calls} ]; then
-    exit 1
-fi
-
-\${workspace}/invocation_\${invocation_index}_code \${args}
+\${workspace}/invocation_\${invocation_index} \${args}
 EOF
-}
-
-_verify_mocks() {
-    for mock in $(find ${mocks} -type d -depth 1 -name "_*.workspace" 2>/dev/null || true); do
-        command=$(echo ${mock} | sed 's/.*\/_//' | sed 's/.workspace//')
-
-        for invocation in $(find ${mock} -depth 1 -name "invocation_*_code" 2>/dev/null || true); do
-            invocation_id=$(echo ${invocation} | sed 's/.*\/invocation_//' | sed 's/_code//')
-            call_count=$(cat ${mock}/invocation_${invocation_id}_calls)
-            expected_calls=$(cat ${mock}/invocation_${invocation_id}_expected_calls)
-
-            if [ ${expected_calls} -ge 0 ] && [ ${call_count} -ne ${expected_calls} ]; then
-                assertion_failed "Command '${command}' was expected to be called $(_format_count ${expected_calls} "time")\nCalled : $(_format_count ${call_count} "time")"
-            fi
-        done
-    done
 }
