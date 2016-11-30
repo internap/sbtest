@@ -1,4 +1,10 @@
+language: generic
+
 script: make
+
+os:
+  - linux
+  - osx
 
 deploy:
   provider: releases
