@@ -182,6 +182,52 @@ EXP
     assert "${actual}" equals "${expected}"
 }
 
+test_a_failure_doesnt_impact_other_tests() {
+
+    cp -aR ${TEST_ROOT_DIR}/../test-fixtures/failing-test/* .
+
+    unset RUN_SINGLE_TEST
+    actual=$(${TEST_ROOT_DIR}/../target/sbtest.sh failing)
+    assert ${?} failed
+
+    expected=$(cat <<-EXP
+
+Running Simple Bash Tests
+-------------------------
+
+failing.that_fails...FAILED
+failing.that_fails_with_stderr...FAILED
+failing.that_works...OK
+
+=========================
+FAIL: failing.that_fails
+-------- STDOUT ---------
+Expected success exit code
+Got: <1>
+-------- STDERR ---------
+
+-------------------------
+
+=========================
+FAIL: failing.that_fails_with_stderr
+-------- STDOUT ---------
+Expected success exit code
+Got: <1>
+-------- STDERR ---------
+This is stuff
+from stderr
+-------------------------
+
+-------------------------
+Ran 3 tests
+
+>>> FAILURE (2 problems) <<<
+
+EXP
+)
+    assert "${actual}" equals "${expected}"
+}
+
 test_a_failure_is_correctly_reported_after_even_after_another_suite_succeeds() {
 
     cp -aR ${TEST_ROOT_DIR}/../test-fixtures/multi-suite/* .
