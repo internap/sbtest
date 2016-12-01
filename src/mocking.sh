@@ -71,8 +71,14 @@ mock() {
         mkdir -p ${mock_workspace}
         echo "1" > ${mock_workspace}/invocation_index
 
-        _mock_handler ${mock_workspace} > ${mocks}/${executable}
-        chmod +x ${mocks}/${executable}
+        if [ -n "${executable%%*/*}" ]; then
+            _mock_handler ${mock_workspace} > ${mocks}/${executable}
+            chmod +x ${mocks}/${executable}
+        else
+            mkdir -p $(dirname ${executable})
+            _mock_handler ${mock_workspace} > ${executable}
+            chmod +x ${executable}
+        fi
 
         invocation_count=1
     else
