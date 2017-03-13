@@ -1,3 +1,10 @@
+action-cat() {
+    path="$@"
+    cat <<EOF
+cat "${path}"
+EOF
+}
+
 action-echo() {
     text="$@"
     cat <<EOF

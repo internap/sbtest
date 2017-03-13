@@ -32,6 +32,41 @@ test_mocking_a_command_to_return_a_value_and_exit_failure() {
     assert "${result}" equals "hello"
 }
 
+test_mocking_a_command_to_return_content_from_missing_file() {
+    mock some-command --and cat /missing/file
+    result=$(some-command)
+    assert ${?} failed
+}
+
+test_mocking_a_command_to_return_content_from_stdin() {
+    mock some-command --and cat -
+    result=$(echo "yes" | some-command)
+    assert ${?} succeeded
+
+    assert "${result}" equals "yes"
+}
+
+test_mocking_a_command_to_return_content_from_file() {
+    temp_file=$(mktemp ${TMPDIR:-"/tmp/"}/sbtest.XXXXXXXX)
+    echo "yes yes" > ${temp_file}
+
+    mock some-command --and cat ${temp_file}
+    result=$(some-command)
+    assert ${?} succeeded
+
+    assert "${result}" equals "yes yes"
+    rm -f ${temp_file}
+}
+
+test_mocking_a_command_to_return_content_from_file_in_test_root() {
+
+    mock some-command --and cat $TEST_ROOT_DIR/data-fixtures/letter.txt
+    result=$(some-command)
+    assert ${?} succeeded
+
+    assert "${result}" equals "Hello world."
+}
+
 test_mocking_several_times_the_same_command() {
     mock some-command --and exit-code 0
     mock some-command --and exit-code 1
