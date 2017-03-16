@@ -5,10 +5,24 @@ cat "${path}"
 EOF
 }
 
+action-cat-stderr() {
+    path="$@"
+    cat <<EOF
+cat "${path}" > /dev/stderr
+EOF
+}
+
 action-echo() {
     text="$@"
     cat <<EOF
 echo "${text}"
+EOF
+}
+
+action-echo-stderr() {
+    text="$@"
+    cat <<EOF
+echo "${text}" > /dev/stderr
 EOF
 }
 
