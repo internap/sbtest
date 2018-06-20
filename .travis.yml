@@ -11,6 +11,7 @@ deploy:
   api_key:
     secure: nWU2eiqP1m3uiuCr0zw/goUoFJPXtCeEyS+lJmzIG3WHrMFoBGejORtm7YDxbaE9ekUhR65ro0PnwFDpVAl1YUwpB5VbJLuT+ZxJ3wvc3oq8nmTK8mODaJQOGx1SLH3P/68dZ+BBlNggNnNoCuB/qrbnOEAv0L2tfN/2BsWDvJpFgu1BiXqmruKzF/I3HVXN5SStMb9sBA4vz8h4ToJWmT15LYPZ25ZeZ8MIHiBO1t2aQXqsjIzZvDgsKnAQarlmt1rIkquTMwnK28TfhixBcT6H1R8ImpQ/dzRv/xq0HzaDe/ngTOsECb16vVdWEdXrX3F3r/4/nchnEierdv0z1/fozMStedKYmvIfbBesfV5566ptZ4NftU4tnUevVLPz+mrQ4dFZqI6DkgJ0By7o60BhsoB/scqDf7vbCczrLL3AadiIe8pXjtvbmZ9AWCmV+JiAav/HKzt0c4sig3qL3lO/gO3WFFz69ViXD9EeAHNlLULFiqRQ2/HtJVkLJHhU4y6mhdkxeEMefAjU7lHMhQ+9p9BhzyeGrqLo/gQa7EX+1YJEzf3EFzFMQwHPRcRy/fC+cMhgT+os5aLmt4+yAiisQ1gkQFh2hAVhGDWITbAdjJAQIOne6QXJYEHVj+0X8wThod6t8PqmtjC5rdatp49sGOkp9vLBaNdPh9lIK58=
   file: target/sbtest.sh
+  skip_cleanup: true
   on:
     repo: internap/sbtest
     tags: true
