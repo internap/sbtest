@@ -32,27 +32,17 @@ test_mocking_a_command_to_return_a_value_and_exit_failure() {
     assert "${result}" equals "hello"
 }
 
-test_mocking_a_command_to_return_a_value_on_stderr_and_exit_success() {
-    mock some-command --and echo-stderr "hello" --and exit-code 0
+test_mocking_a_command_to_return_a_value_on_stderr() {
+    mock some-command --and echo-stderr "hello"
 
     result=$(some-command 2>&1 1>/dev/null)
-    assert ${?} succeeded
 
     assert "${result}" equals "hello"
 }
 
-test_mocking_a_command_to_return_a_value_on_stderr_and_exit_failure() {
-    mock some-command --and echo-stderr "hello" --and exit-code 1
-
-    result=$(some-command 2>&1 1>/dev/null)
-    assert ${?} failed
-
-    assert "${result}" equals "hello"
-}
-
-test_mocking_a_command_to_return_content_from_missing_file() {
+test_mocking_a_command_to_return_content_from_missing_file_should_fail() {
     mock some-command --and cat /missing/file
-    result=$(some-command)
+    some-command
     assert ${?} failed
 }
 
@@ -84,10 +74,9 @@ test_mocking_a_command_to_return_content_from_file_in_test_root() {
     assert "${result}" equals "Hello world."
 }
 
-test_mocking_a_command_to_return_content_from_missing_file_on_stderr() {
+test_mocking_a_command_to_return_content_from_missing_file_on_stderr_should_fail() {
     mock some-command --and cat-stderr /missing/file
-
-    result=$(some-command 2>&1 1>/dev/null)
+    some-command
     assert ${?} failed
 }
 
@@ -118,7 +107,6 @@ test_mocking_a_command_to_return_content_from_file_in_test_root_on_stderr() {
 
     assert "${result}" equals "Hello world."
 }
-
 
 test_mocking_several_times_the_same_command() {
     mock some-command --and exit-code 0
