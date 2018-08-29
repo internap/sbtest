@@ -4,6 +4,8 @@ TEST_FILE=$2
 TESTS_FILTER=$3
 REGISTRY=$4
 
+RUN_INPLACE=${RUN_INPLACE:-"false"}
+
 source ${TEST_FILE} || fail "Unable to read ${TEST_FILE}."
 
 all_functions=$(typeset -F | sed "s/declare -f //")
@@ -14,7 +16,10 @@ teardown=$(echo "${all_functions}" | grep "^teardown" || true)
 
 _setup_workspace() {
     workspace="$(mktemp -d "/tmp/workspace.$(basename ${TEST_FILE}).XXXXXXXX")"
-    cp -aR ${SOURCE_ROOT}/* ${workspace}/
+
+    if ! $RUN_INPLACE; then
+        cp -aR ${SOURCE_ROOT}/* ${workspace}/
+    fi
 
     mocks="$(mktemp -d "${workspace}/mocks.XXXXXXXX")"
     original_path=${PATH}
@@ -68,7 +73,11 @@ assertion_failed() {
 for test in ${tests}; do
     _setup_workspace
 
-    pushd ${workspace} >/dev/null
+    if $RUN_INPLACE; then
+        pushd ${SOURCE_ROOT}
+    else
+        pushd ${workspace} >/dev/null
+    fi
 
     if [ -n ${setup} ]; then
         ${setup}

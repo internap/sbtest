@@ -5,6 +5,7 @@ if [ -z "${RUN_SINGLE_TEST:-""}" ]; then
     test_sources_root="test"
     test_suites_filter="test_*"
     test_filter="^test_"
+    run_inplace="false"
 
     while [[ $# -gt 0 ]]; do
         key="$1"
@@ -15,6 +16,13 @@ if [ -z "${RUN_SINGLE_TEST:-""}" ]; then
             ;;
             --tests)
             test_sources_root="$2"; shift
+            ;;
+            --inplace)
+            run_inplace="true";
+            ;;
+            --*)
+            echo "Unsupported argument ${key}" > /dev/stderr
+            exit 1
             ;;
             *)
             if [[ ${key} == *"."* ]]; then
@@ -40,7 +48,7 @@ if [ -z "${RUN_SINGLE_TEST:-""}" ]; then
     failure_count=0
 
     for f in $(find ${test_sources_root} -name "${test_suites_filter}" | sort); do
-        TEST_ROOT_DIR=${test_sources_root} RUN_SINGLE_TEST=1 $0 ${sources_root} ${f} ${test_filter} ${registry} || fail "${f} failed."
+        RUN_INPLACE=${run_inplace} TEST_ROOT_DIR=${test_sources_root} RUN_SINGLE_TEST=1 $0 ${sources_root} ${f} ${test_filter} ${registry} || fail "${f} failed."
 
         new_tests=$(cat ${registry}/test_count)
         test_count=$((${test_count} + ${new_tests}))
