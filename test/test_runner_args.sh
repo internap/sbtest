@@ -124,3 +124,10 @@ EXP
 )
     assert "${actual}" equals "${expected}"
 }
+
+test_refuses_invalid_arguments() {
+    actual=$(${TEST_ROOT_DIR}/../target/sbtest.sh --invalid 2>&1 1>/dev/null)
+    assert ${?} failed
+
+    assert "$actual" equals "Unsupported argument --invalid"
+}
