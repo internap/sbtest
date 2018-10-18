@@ -74,7 +74,7 @@ for test in ${tests}; do
     _setup_workspace
 
     if $RUN_INPLACE; then
-        pushd ${SOURCE_ROOT}
+        pushd ${SOURCE_ROOT} >/dev/null
     else
         pushd ${workspace} >/dev/null
     fi
