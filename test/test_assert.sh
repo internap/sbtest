@@ -65,8 +65,8 @@ test_assert_contains_fails_with_proper_error_message() {
     assertion_error=$(cat assertion_output)
 
     expected_error=$(cat <<-EXP
-Expected:         <abc>
-To match pattern: <z$>
+Expected:           <abc>
+To contain pattern: <z$>
 EXP
 )
     assert ${result} failed

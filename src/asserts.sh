@@ -20,5 +20,5 @@ _assert_failed() {
 }
 
 _assert_contains() {
-    echo "$1" | grep -q "$2" || assertion_failed "Expected:         <$1>\nTo match pattern: <$2>"
+    echo "$1" | grep -q "$2" || assertion_failed "Expected:           <$1>\nTo contain pattern: <$2>"
 }
