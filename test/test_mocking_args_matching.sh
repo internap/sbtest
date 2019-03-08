@@ -21,3 +21,24 @@ test_fails_if_2_with_args_argments_are_given() {
 
     assert "$(cat error)" equals "Cannot expect more than 1 set of argument for an invocation, please use 'mock' multiple times"
 }
+
+test_supports_escaped_quotes_in_args() {
+    mock some-command --with-args "one 'two' three"
+
+    some-command one \'two\' three
+    assert ${?} succeeded
+}
+
+test_supports_escaped_double_quotes_in_args() {
+    mock some-command --with-args "one \"two\" three"
+
+    some-command one \"two\" three
+    assert ${?} succeeded
+}
+
+test_supports_escaped_double_quotes_in_single_quotes_in_args() {
+    mock some-command --with-args 'one "two" three'
+
+    some-command 'one "two" three'
+    assert ${?} succeeded
+}

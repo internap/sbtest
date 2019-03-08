@@ -34,16 +34,16 @@ EOF
 }
 
 validate-args() {
-    expected="$@"
+    file=$(mktemp validate-args.XXXXXXXXX)
+    echo "$@" > ${file}
+
     cat <<EOF
 args="\$@"
-
-if [ "\${args}" != "${expected}" ]; then
-
+if [ "\${args}" != "\$(cat ${file})" ]; then
     cat <<OUT
 Unexpected invocation for command 'some-command':
 Got :      <"\${args}">
-Expected : <"${expected}">
+Expected : <"\$(cat ${file})">
 OUT
     exit 1
 fi
