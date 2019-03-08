@@ -34,7 +34,7 @@ EOF
 }
 
 validate-args() {
-    file=$(mktemp validate-args.XXXXXXXXX)
+    file="$(pwd)/validate-args-expected-${RANDOM}${RANDOM}"
     echo "$@" > ${file}
 
     cat <<EOF

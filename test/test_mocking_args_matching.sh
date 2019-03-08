@@ -42,3 +42,11 @@ test_supports_escaped_double_quotes_in_single_quotes_in_args() {
     some-command 'one "two" three'
     assert ${?} succeeded
 }
+
+test_mktmp_should_be_mockable() {
+    mock mktemp --with-args '-d /tmp/f.XXXXXXXX' --and echo "/tmp/myfile"
+
+    file=$(mktemp -d "/tmp/f.XXXXXXXX")
+    assert ${?} succeeded
+    assert "${file}" equals "/tmp/myfile"
+}
