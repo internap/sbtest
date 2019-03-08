@@ -31,7 +31,7 @@ test_assert_equals_with_strings_passing() {
 test_assert_equals_with_strings_failing() {
     assert "no" equals "yes" > assertion_output
     result=${?}
-    rm .assertion_error # The test runner would think the test failed
+    _hide_assertion_failure_from_test_runner
 
     assertion_error=$(cat assertion_output)
 
@@ -48,4 +48,32 @@ test_assert_multiworks_string_works() {
     (assert "yes but no" equals "yes but no")
 
     assert ${?} succeeded
+}
+
+test_assert_contains() {
+    assert "hello world" contains "^hello world$"
+    assert "hello world" contains "^hello"
+    assert "hello world" contains "world$"
+    assert "hello world" contains "w"
+}
+
+test_assert_contains_fails_with_proper_error_message() {
+    assert "abc" contains "z$" > assertion_output
+    result=${?}
+    _hide_assertion_failure_from_test_runner
+
+    assertion_error=$(cat assertion_output)
+
+    expected_error=$(cat <<-EXP
+Expected:           <abc>
+To contain pattern: <z$>
+EXP
+)
+    assert ${result} failed
+    assert "${assertion_error}" equals "${expected_error}"
+}
+
+_hide_assertion_failure_from_test_runner() {
+    # The test runner would think the test failed
+    rm .assertion_error
 }

@@ -39,13 +39,12 @@ validate-args() {
 args="\$@"
 
 if [ "\${args}" != "${expected}" ]; then
-
-    cat <<OUT
+    cat > \$0_error <<OUT
 Unexpected invocation for command 'some-command':
 Got :      <"\${args}">
 Expected : <"${expected}">
 OUT
-    exit 1
+    exit 1 # Kept for historical reasons. Proper usage would be mock xyz --with-args "arg1 arg2" --and exit-code 1.
 fi
 EOF
 }
@@ -158,6 +157,10 @@ _verify_mocks() {
             if [ ${expected_calls} -ge 0 ] && [ ${call_count} -ne ${expected_calls} ]; then
                 assertion_failed "Command '${command}' was expected to be called $(_format_count ${expected_calls} "time")\nCalled : $(_format_count ${call_count} "time")"
             fi
+        done
+
+        for invocation in $(find ${mock} -maxdepth 1 -name "invocation_*_error" 2>/dev/null || true); do
+            assertion_failed "$(cat $invocation)"
         done
     done
 }

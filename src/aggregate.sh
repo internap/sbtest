@@ -3,9 +3,14 @@ set -eu
 
 src=$(dirname $0)
 
-cat ${src}/header.sh
-cat ${src}/utils.sh
-cat ${src}/asserts.sh
-cat ${src}/mocking.sh
-cat ${src}/cli.sh
-cat ${src}/test-runner.sh
+include() {
+    cat $1
+    printf '\n'
+}
+
+include ${src}/header.sh
+include ${src}/utils.sh
+include ${src}/asserts.sh
+include ${src}/mocking.sh
+include ${src}/cli.sh
+include ${src}/test-runner.sh

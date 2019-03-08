@@ -18,3 +18,7 @@ _assert_succeeded() {
 _assert_failed() {
     test ${1} -ne 0 || assertion_failed "Expected failure exit code\nGot: <$1>"
 }
+
+_assert_contains() {
+    echo "$1" | grep -q "$2" || assertion_failed "Expected:           <$1>\nTo contain pattern: <$2>"
+}
